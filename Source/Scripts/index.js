@@ -29,7 +29,7 @@ class DataSet {
   }
   set NumArea(value) {
     if (value != 0 && isNaN(value) == false) {
-      this.#NumArea = value;
+      this.#NumArea = value - 1;
     } else {
       console.log("Value is NaN");
       alert("Ошибка NumArea");
@@ -56,10 +56,9 @@ class DataSet {
   }
 
   //Заполнение массива
-  AreaArrayPush(Start = 0, Values) {
-    this.Start = Start;
-    this.Value = Values;
-    this.#AreaValues[this.Start] = this.Value;
+  AreaArrayPush(i, values) {
+    this.Value = values;
+    this.#AreaValues[i] = this.Value;
   }
 
   //Сумма все значений массива
@@ -108,10 +107,10 @@ let TableArea = () => {
   data.NumArea = NumAreaInput.value;
   console.log("NumArea: " + data.NumArea);
 
-  for (let i = 1; i <= data.NumArea; i++) {
+  for (let i = 0; i <= data.NumArea; i++) {
     console.log("Start");
     if (i <= data.NumArea) {
-      AllArea.innerHTML += `<div class="area_input">Площадь повреждённой территории на ${i} участке:  <input type=text id='Area${i}'> `;
+      AllArea.innerHTML += `<div class="area_input">Площадь повреждённой территории на ${i + 1} участке:  <input type=text id='Area${i}'> `;
     }
   }
 
@@ -136,14 +135,11 @@ let TableArea = () => {
 
 //Подцветка аномалии
 let HighligthAnomaly = () => {
-  let counter = 1;
   for (let i = 0; i <= data.NumArea; i++) {
-    document.getElementById("Area" + counter).style.background = "white";
+    document.getElementById("Area" + i).style.background = "white";
     if ((data.AreaValues[i] - data.AverageArea) / data.Anomaly >= 2.145) {
-      console.log(counter);
-      document.getElementById("Area" + counter).style.background = "red";
+      document.getElementById("Area" + i).style.background = "red";
     }
-    counter++;
   }
 };
 
@@ -151,11 +147,11 @@ let HighligthAnomaly = () => {
 let SearchAnomaly = () => {
   // Начальный элемент массива 
   let Start = 0;
-  
+
   data.ClearAreaArray();
-  for (let i = 1; i <= data.NumArea; i++) {
+  for (let i = 0; i <= data.NumArea; i++) {
     let element = Number(document.getElementById("Area" + i).value);
-    data.AreaArrayPush(Start, element);
+    data.AreaArrayPush(i, element);
     Start++;
   }
   SumAreaInput.value = data.setSumArea();
@@ -173,7 +169,7 @@ let AnomalyHide = () => {
 
   //  n = ChisloYchastkov.value;
 
-  for (let i = 1; i <= data.NumArea; i++) {
+  for (let i = 0; i <= data.NumArea; i++) {
     let element = document.getElementById("Area" + i);
 
     if ((element.value - CalcAverageArea) / Otklonenie.value < k) {
