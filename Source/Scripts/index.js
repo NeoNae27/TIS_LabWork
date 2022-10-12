@@ -45,8 +45,6 @@ class DataSet {
   //Среднее значение
   #AverageArea = 0;
   get AverageArea() {
-    // console.log("dsa" + this.#NumArea);
-    // this.#AverageArea = this.#SumArea / this.#NumArea;
     return this.#AverageArea;
   }
 
@@ -80,7 +78,6 @@ class DataSet {
 
   //Среднее значение
   setAverageArea() {
-    console.log("dsa" + this.#NumArea);
     return (this.#AverageArea = this.#SumArea / this.#NumArea);
   }
 
@@ -98,9 +95,9 @@ class DataSet {
       }
     }
     this.#SQAnomaly = Math.sqrt(this.#Anomaly / this.#NumArea);
+
     return this.#SQAnomaly;
   }
-
 }
 
 let data = new DataSet();
@@ -138,38 +135,34 @@ let TableArea = () => {
 };
 
 //Подцветка аномалии
-// HighlightAnomaly(element) {
-//   this.element = Element;
-//   for (let i = 1; i <= this._NumArea; i++) {
-//     let element = document.getElementById("Area" + i);
-//     element.style.background = "white";
-//     this.setAnomaly();
-//     if (
-//       (element - this.#AreaValues) / AnomalyInput.value >=
-//       this.setAnomaly
-//     ) {
-//       return (element.style.background = "red");
-//     }
-//   }
-// }
+let HighligthAnomaly = () => {
+  let counter = 1;
+  for (let i = 0; i <= data.NumArea; i++) {
+    document.getElementById("Area" + counter).style.background = "white";
+    if ((data.AreaValues[i] - data.AverageArea) / data.Anomaly >= 2.145) {
+      console.log(counter);
+      document.getElementById("Area" + counter).style.background = "red";
+    }
+    counter++;
+  }
+};
 
 // Поиск аномалий
 let SearchAnomaly = () => {
+  // Начальный элемент массива 
   let Start = 0;
+  
   data.ClearAreaArray();
   for (let i = 1; i <= data.NumArea; i++) {
     let element = Number(document.getElementById("Area" + i).value);
     data.AreaArrayPush(Start, element);
     Start++;
   }
-  // console.log(data.AreaValues);
-
-  //Сумма все занечений
   SumAreaInput.value = data.setSumArea();
-
   AverageAreaInput.value = data.setAverageArea();
-
   AnomalyInput.value = data.setAnomaly();
+
+  HighligthAnomaly();
 };
 
 //TODO КАЛ НЕ ПЕРЕДЕЛАНЫЙ
