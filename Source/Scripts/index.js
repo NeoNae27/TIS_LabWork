@@ -12,7 +12,7 @@ class DataSet {
     return this.#AreaValues;
   }
   set AreaValues(value) {
-    if (typeof value == `number` && isNaN(value) == false) {
+    if (typeof value === "number" && !isNaN(value)) {
       console.log(value);
       this.#AreaValues.push(value);
     } else {
@@ -29,7 +29,8 @@ class DataSet {
   }
   set NumArea(value) {
     if (value != 0 && isNaN(value) == false) {
-      this.#NumArea = value - 1;
+      this.#NumArea = value;
+      console.log(this.#NumArea);
     } else {
       console.log("Value is NaN");
       alert("Ошибка NumArea");
@@ -83,8 +84,8 @@ class DataSet {
   //Среднеквадратичнео отклонение
   setAnomaly() {
     this.#Anomaly = 0;
-    for (let i = 0; i <= this.#NumArea - 1; i++) {
-      if (i <= this.#NumArea) {
+    for (let i = 0; i < this.#NumArea; i++) {
+      if (i < this.#NumArea) {
         if (
           typeof this.#AreaValues[i] == `number` &&
           isNaN(this.#AreaValues[i]) == false
@@ -101,29 +102,25 @@ class DataSet {
 
 let data = new DataSet();
 
+// Создание полей для ввода знаяений
 let TableArea = () => {
   AllArea.innerHTML = ``;
 
   data.NumArea = NumAreaInput.value;
   console.log("NumArea: " + data.NumArea);
 
-  for (let i = 0; i <= data.NumArea; i++) {
-    console.log("Start");
-    if (i <= data.NumArea) {
-      AllArea.innerHTML += `<div class="area_input">Площадь повреждённой территории на ${i + 1} участке:  <input type=text id='Area${i}'> `;
-    }
+  for (let i = 0, counter = 1; i < data.NumArea; i++, counter++) {
+    console.log(`Start. Area number: ${data.NumArea}`);
+    AllArea.innerHTML += `<div class="area_input">Площадь повреждённой территории на ${counter} участке:  <input type=text id='Area${i}' value='0'> `;
   }
 
   SearchContainer.innerHTML = ``;
 
   SearchContainer.innerHTML += `<div class="area_input"> Общая площадь повреждённой территории: <input type=text id='SumAreaInput'>`;
-  // data.SumArea = Number(SumAreaInput.value); // 0
 
   SearchContainer.innerHTML += `<div class="area_input"> Средняя площадь повреждённой территории: <input type=text id='AverageAreaInput'>`;
-  // data.AverageArea = Number(AverageAreaInput.value); // 0
 
   SearchContainer.innerHTML += `<div class="area_input"> Среднеквадратическое отклонение: <input type=text id='AnomalyInput'>`;
-  // data.Anomaly = Number(AnomalyInput.value); // 0
 
   SearchContainer.innerHTML += `<div><input type=button value='Поиск аномальных значений' onClick='SearchAnomaly()' id='SearchAnomalyButton'>`;
 
@@ -135,7 +132,7 @@ let TableArea = () => {
 
 //Подцветка аномалии
 let HighligthAnomaly = () => {
-  for (let i = 0; i <= data.NumArea; i++) {
+  for (let i = 0; i < data.NumArea; i++) {
     document.getElementById("Area" + i).style.background = "white";
     if ((data.AreaValues[i] - data.AverageArea) / data.Anomaly >= 2.145) {
       document.getElementById("Area" + i).style.background = "red";
@@ -145,47 +142,50 @@ let HighligthAnomaly = () => {
 
 // Поиск аномалий
 let SearchAnomaly = () => {
-  // Начальный элемент массива 
-  let Start = 0;
-
   data.ClearAreaArray();
-  for (let i = 0; i <= data.NumArea; i++) {
+  for (let i = 0; i < data.NumArea; i++) {
+    console.log(typeof document.getElementById("Area" + i).value);
+    console.log(document.getElementById("Area" + i).value);
     let element = Number(document.getElementById("Area" + i).value);
     data.AreaArrayPush(i, element);
-    Start++;
   }
+  console.log(data.AreaValues);
   SumAreaInput.value = data.setSumArea();
   AverageAreaInput.value = data.setAverageArea();
   AnomalyInput.value = data.setAnomaly();
 
+  if (data.NumArea < 10) {
+    alert(`Выборка слишком маленькая определить аномалию невозможно`);
+  }
+
   HighligthAnomaly();
 };
 
-//TODO КАЛ НЕ ПЕРЕДЕЛАНЫЙ
-let AnomalyHide = () => {
-  let dataArray = [];
+// //TODO КАЛ НЕ ПЕРЕДЕЛАНЫЙ
+// let AnomalyHide = () => {
+//   let dataArray = [];
 
-  let j = 0;
+//   let j = 0;
 
-  //  n = ChisloYchastkov.value;
+//   //  n = ChisloYchastkov.value;
 
-  for (let i = 0; i <= data.NumArea; i++) {
-    let element = document.getElementById("Area" + i);
+//   for (let i = 0; i <= data.NumArea; i++) {
+//     let element = document.getElementById("Area" + i);
 
-    if ((element.value - CalcAverageArea) / Otklonenie.value < k) {
-      myarray[j] = document.getElementById(element1).value;
+//     if ((element.value - CalcAverageArea) / Otklonenie.value < k) {
+//       myarray[j] = document.getElementById(element1).value;
 
-      j = j + 1;
-    }
-  }
+//       j = j + 1;
+//     }
+//   }
 
-  ChisloYchastkov.value = j;
+//   ChisloYchastkov.value = j;
 
-  TableYchastki();
+//   TableYchastki();
 
-  for (var i = 1; i <= j; i++) {
-    element1 = "ploshad" + i;
+//   for (var i = 1; i <= j; i++) {
+//     element1 = "ploshad" + i;
 
-    document.getElementById(element1).value = myarray[i - 1];
-  }
-};
+//     document.getElementById(element1).value = myarray[i - 1];
+//   }
+// };
