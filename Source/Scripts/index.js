@@ -140,6 +140,8 @@ let TableArea = () => {
 
   SearchContainer.innerHTML = ``;
 
+  // SearchContainer.innerHTML = `<div><textarea id="TextArea" placeholder="Скопируйте сюда все значения" style="width:300px;"></textarea>`
+
   SearchContainer.innerHTML += `<div class="area_input"> Общая площадь повреждённой территории: <input type=text id='SumAreaInput'>`;
 
   SearchContainer.innerHTML += `<div class="area_input"> Средняя площадь повреждённой территории: <input type=text id='AverageAreaInput'>`;
