@@ -203,10 +203,11 @@ let AnomalyHide = () => {
   for (let i = 1; i < data.NumArea; i++) {
     document.getElementById("Area" + i).value = data.AreaValues[i];
   }
+  SearchAnomaly();
 };
 
 let AnomalyMid = () => {
-  console.log('asdas')
+  console.log("asdas");
   for (let i = 0; i < data.NumArea; i++) {
     if (
       (data.AreaValues[i] - data.AverageArea) / data.Anomaly >
@@ -218,9 +219,49 @@ let AnomalyMid = () => {
 
     TableArea();
 
+    for (let i = 0; i < data.NumArea; i++) {
+      document.getElementById("Area" + i).value = data.AreaValues[i];
+    }
+  }
+  SearchAnomaly();
+};
+
+let AnomalyMin = () => {
+  for (let i = 0; i < data.NumArea; i++) {
+    if (
+      (data.AreaValues[i] - data.AverageArea) / data.Anomaly >
+      data.Coefficient
+    ) {
+      console.log(Math.min.apply(null, data.AreaValues));
+      data.AreaValues[i] = Math.min.apply(null, data.AreaValues);
+      console.log(data.AreaValues);
+    }
+  }
+
+  TableArea();
+
   for (let i = 0; i < data.NumArea; i++) {
     document.getElementById("Area" + i).value = data.AreaValues[i];
   }
+  SearchAnomaly();
+};
 
+let AnomalyMax = () => {
+  for (let i = 0; i < data.NumArea; i++) {
+    if (
+      (data.AreaValues[i] - data.AverageArea) / data.Anomaly >
+      data.Coefficient
+    ) {
+      console.log(Math.max.apply(null, data.AreaValues));
+      data.AreaValues[i] = Math.max.apply(null, data.AreaValues);
+      console.log(data.AreaValues);
+    }
   }
+
+  TableArea();
+
+  for (let i = 0; i < data.NumArea; i++) {
+    document.getElementById("Area" + i).value = data.AreaValues[i];
+  }
+  SearchAnomaly();
 };
