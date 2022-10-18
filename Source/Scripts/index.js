@@ -7,18 +7,18 @@ const AreaInput = document.getElementsByClassName("area_input");
 //Класс стадарных значений (Кол.полей; Сумма всех значений; Среднее; Квад.отклонение)
 class DataSet {
   //Массив с данными из AreaInput
-  #AreaValues = [];
+  _AreaValues = [];
   get AreaValues() {
-    return this.#AreaValues;
+    return this._AreaValues;
   }
   set AreaValues(value) {
-    if (typeof value === "number" && !isNaN(value)) {
+    if (typeof value === `number` && !isNaN(value)) {
       console.log(value);
-      this.#AreaValues.push(value);
+      this._AreaValues.push(value);
     } else {
-      this.#AreaValues = [];
-      console.log("Value is NaN");
-      alert("Вы ввели не верное значение. Массив очищен");
+      this._AreaValues = [];
+      console.log(`Value is NaN`);
+      alert(`Вы ввели не верное значение. Массив очищен`);
     }
   }
 
@@ -32,8 +32,8 @@ class DataSet {
       this.#NumArea = value;
       console.log(this.#NumArea);
     } else {
-      console.log("Value is NaN");
-      alert("Ошибка NumArea");
+      console.log(`Value is NaN`);
+      alert(`Ошибка NumArea`);
     }
   }
 
@@ -56,15 +56,37 @@ class DataSet {
     return this.#SQAnomaly;
   }
 
+  // Коэффицент
+  #Coefficient = 0;
+  get Coefficient() {
+    return this.#Coefficient;
+  }
+
+  setCoefficient() {
+    if (this._NumArea > 5 && this._NumArea < 10) {
+      this.#Coefficient = 2.146;
+    } else if (this._NumArea > 10 && this._NumArea < 15) {
+      this.#Coefficient = 2.326;
+    } else if (this._NumArea > 15 && this._NumArea < 20) {
+      this.#Coefficient = 2.447;
+    } else if (this._NumArea > 20 && this._NumArea < 25) {
+      this.#Coefficient = 2.537;
+    } else if (this._NumArea > 25) {
+      this.#Coefficient = 2.633;
+    } else {
+      this.#Coefficient = 1.791;
+    }
+  }
+
   //Заполнение массива
   AreaArrayPush(i, values) {
     this.Value = values;
-    this.#AreaValues[i] = this.Value;
+    this._AreaValues[i] = this.Value;
   }
 
   //Сумма все значений массива
   setSumArea() {
-    return (this.#SumArea = this.#AreaValues.reduce(
+    return (this.#SumArea = this._AreaValues.reduce(
       (acc, num) => acc + num,
       0
     ));
@@ -73,7 +95,7 @@ class DataSet {
   //Очистка массива Area
   ClearAreaArray() {
     console.log("Clear Area Array!");
-    return (this.#AreaValues.length = 0);
+    return (this._AreaValues.length = 0);
   }
 
   //Среднее значение
@@ -87,10 +109,10 @@ class DataSet {
     for (let i = 0; i < this.#NumArea; i++) {
       if (i < this.#NumArea) {
         if (
-          typeof this.#AreaValues[i] == `number` &&
-          isNaN(this.#AreaValues[i]) == false
+          typeof this._AreaValues[i] == `number` &&
+          isNaN(this._AreaValues[i]) == false
         ) {
-          this.#Anomaly += Math.pow(this.#AreaValues[i] - this.#AverageArea, 2);
+          this.#Anomaly += Math.pow(this._AreaValues[i] - this.#AverageArea, 2);
         }
       }
     }
@@ -107,6 +129,8 @@ let TableArea = () => {
   AllArea.innerHTML = ``;
 
   data.NumArea = NumAreaInput.value;
+  data.setCoefficient();
+  console.log(data.Coefficient);
   console.log("NumArea: " + data.NumArea);
 
   for (let i = 0, counter = 1; i < data.NumArea; i++, counter++) {
@@ -134,7 +158,10 @@ let TableArea = () => {
 let HighligthAnomaly = () => {
   for (let i = 0; i < data.NumArea; i++) {
     document.getElementById("Area" + i).style.background = "white";
-    if ((data.AreaValues[i] - data.AverageArea) / data.Anomaly >= 2.145) {
+    if (
+      (data.AreaValues[i] - data.AverageArea) / data.Anomaly >=
+      data.Coefficient
+    ) {
       document.getElementById("Area" + i).style.background = "red";
     }
   }
@@ -154,38 +181,46 @@ let SearchAnomaly = () => {
   AverageAreaInput.value = data.setAverageArea();
   AnomalyInput.value = data.setAnomaly();
 
-  if (data.NumArea < 10) {
-    alert(`Выборка слишком маленькая определить аномалию невозможно`);
-  }
-
   HighligthAnomaly();
 };
 
-// //TODO КАЛ НЕ ПЕРЕДЕЛАНЫЙ
-// let AnomalyHide = () => {
-//   let dataArray = [];
+// Исключение
+let AnomalyHide = () => {
+  for (let i = 0; i < data.NumArea; i++) {
+    if (
+      (data.AreaValues[i] - data.AverageArea) / data.Anomaly >
+      data.Coefficient
+    ) {
+      data.AreaValues.splice(i, 1);
+      console.log(data.AreaValues);
+      NumAreaInput.value -= 1;
+      console.log(NumAreaInput.value);
+    }
+  }
 
-//   let j = 0;
+  TableArea();
 
-//   //  n = ChisloYchastkov.value;
+  for (let i = 1; i < data.NumArea; i++) {
+    document.getElementById("Area" + i).value = data.AreaValues[i];
+  }
+};
 
-//   for (let i = 0; i <= data.NumArea; i++) {
-//     let element = document.getElementById("Area" + i);
+let AnomalyMid = () => {
+  console.log('asdas')
+  for (let i = 0; i < data.NumArea; i++) {
+    if (
+      (data.AreaValues[i] - data.AverageArea) / data.Anomaly >
+      data.Coefficient
+    ) {
+      data.AreaValues[i] = data.AverageArea;
+      console.log(data.AreaValues);
+    }
 
-//     if ((element.value - CalcAverageArea) / Otklonenie.value < k) {
-//       myarray[j] = document.getElementById(element1).value;
+    TableArea();
 
-//       j = j + 1;
-//     }
-//   }
+  for (let i = 0; i < data.NumArea; i++) {
+    document.getElementById("Area" + i).value = data.AreaValues[i];
+  }
 
-//   ChisloYchastkov.value = j;
-
-//   TableYchastki();
-
-//   for (var i = 1; i <= j; i++) {
-//     element1 = "ploshad" + i;
-
-//     document.getElementById(element1).value = myarray[i - 1];
-//   }
-// };
+  }
+};
