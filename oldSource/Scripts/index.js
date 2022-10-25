@@ -1,5 +1,7 @@
 "use strict";
 
+// import fs from 'fs';
+
 const AllArea = document.getElementById("All_area");
 const SearchContainer = document.getElementById("Search_container");
 const AreaInput = document.getElementsByClassName("area_input");
