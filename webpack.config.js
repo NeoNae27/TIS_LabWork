@@ -38,7 +38,7 @@ module.exports = {
 
   // DIST
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
   },
 
@@ -62,7 +62,7 @@ module.exports = {
     // Очистка
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[name].[contenthash].css",
+      filename: "[name].css",
     }),
 
     // Копирование
