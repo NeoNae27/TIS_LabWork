@@ -8,12 +8,12 @@ const path = require("path");
 
 const PORT = 3000;
 
-app.use(express.static(path.resolve(__dirname, "src", "static")));
+app.use(express.static(path.resolve(__dirname, "dist")));
 
 app.listen(PORT, () => {
   console.log(`Application listening on port ${PORT}!`);
 });
 
 app.get(`/`, function (req, res) {
-  res.sendFile(path.resolve(__dirname, "src", "static", "pages", "index.html"));
+  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
